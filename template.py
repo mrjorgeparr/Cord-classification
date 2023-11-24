@@ -21,7 +21,7 @@ import librosa as lbs
 # Import our custom lib for audio feature extraction (makes use of librosa)
 import audio_features as af
 
-
+# extra imports 
 import xgboost as xgb
 from sklearn.model_selection import GridSearchCV
 ##############################################################################
@@ -41,7 +41,7 @@ def extract_features(X,verbose = True):
     sr = lbs.get_samplerate(X[0])
     
     # Specify the number of features to extract
-    n_feat = 4
+    n_feat = 5
     
     # Generate empty feature matrix
     M = np.zeros((num_data,n_feat))
@@ -83,10 +83,22 @@ def extract_features(X,verbose = True):
         M[i,2] = np.nanmax(ctsft)
 
         spc = af.get_spectral_centroid(audio_data, .1)
-        M[i,3] = np.mean(spc)
-        zero_crossings = lbs.zero_crossings(audio_data, pad=False)
-        zero_crossings_rate = np.mean(zero_crossings)
+        M[i,3] = np.max(spc) # center of mass of frequency
+        # zero_crossings = lbs.zero_crossings(audio_data, pad=False)
+        # zero_crossings_rate = np.mean(zero_crossings)
+        M[i,4] = np.nanmax(af.get_spectral_entropy(audio_data))
+        """
+        KEEPING THE SVM
+            + WITH THE NANMEAN AND NANMAX ENERGY ENTROPIES, STFT FOR 2048, MEAN SPECTRAL CENTROID 
+            AND NANMAX SPECTRAL ENTROPY YOU OBTAIN .58 AUC
+            +  adding mfccs goes to .5537
+            + nanmean of energy entropies, nanmax of energy entropies, stft 2048 nanmax and max(mean gives worse results .51) of spectral centroid
+            gives an AUC of .64
 
+        WITH XGBOOST
+            + Best combination so far is 5 features, nanmean and max for energy entropy, 
+            max chroma stft 2048, max spc and nanmax spectral entropy, gives .824
+        """
         """
 
         # second experiment
@@ -148,9 +160,9 @@ scaler = StandardScaler().fit(M_train)
 M_train_n = scaler.transform(M_train)
 """
 # We use a Support Vector Machine with RBF kernel
-clf = SVC(probability=True)
+best_clf = SVC(probability=True)
 # Train model
-clf.fit(M_train_n, y_train)
+best_clf.fit(M_train_n, y_train)
 """
 
 
