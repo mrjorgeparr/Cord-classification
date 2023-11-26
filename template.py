@@ -41,7 +41,7 @@ def extract_features(X,verbose = True):
     sr = lbs.get_samplerate(X[0])
     
     # Specify the number of features to extract
-    n_feat = 5
+    n_feat = 6
     
     # Generate empty feature matrix
     M = np.zeros((num_data,n_feat))
@@ -87,6 +87,8 @@ def extract_features(X,verbose = True):
         # zero_crossings = lbs.zero_crossings(audio_data, pad=False)
         # zero_crossings_rate = np.mean(zero_crossings)
         M[i,4] = np.nanmax(af.get_spectral_entropy(audio_data))
+        # M[i,5] = np.nanmax(af.get_spectral_spread(audio_data, .1))
+        
         """
         KEEPING THE SVM
             + WITH THE NANMEAN AND NANMAX ENERGY ENTROPIES, STFT FOR 2048, MEAN SPECTRAL CENTROID 
@@ -94,10 +96,15 @@ def extract_features(X,verbose = True):
             +  adding mfccs goes to .5537
             + nanmean of energy entropies, nanmax of energy entropies, stft 2048 nanmax and max(mean gives worse results .51) of spectral centroid
             gives an AUC of .64
+            + nanmean of energy entropies, nanmax of energy entropies, stft 2048 nanmax and max(mean gives worse results .51) of spectral centroid
+            gives an AUC of .64 and mean spectral entropy gives .627
 
         WITH XGBOOST
             + Best combination so far is 5 features, nanmean and max for energy entropy, 
             max chroma stft 2048, max spc and nanmax spectral entropy, gives .824
+            + adding that nanmax of spectral spread with .1 sampling rate gives .816
+            + nanmean of energy entropies, nanmax of energy entropies, stft 2048 nanmax and max(mean gives worse results .51) of spectral centroid
+            and mean spectral entropy gives .802
         """
         """
 

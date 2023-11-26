@@ -242,3 +242,14 @@ def get_mfccs(x, sr, flen=1024, hop=256, n_mfcc=20):
   S = lbs.feature.melspectrogram(y=x, sr=sr, n_fft=flen, hop_length=hop)
   mfcc_frames = lbs.feature.mfcc(sr=sr, S=S, n_mfcc=n_mfcc)
   return mfcc_frames.T
+
+
+def get_constant_q_chromagram(x, sr):
+  """
+  Computes Constant-Q chromagram from a waveform
+  ARGUMENTS:
+      x: audio data
+      sr: sampling rate
+  """
+  constant_q_chromagram = lbs.feature.chroma_cqt(y=x, sr=sr)
+  return constant_q_chromagram
