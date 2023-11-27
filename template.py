@@ -165,13 +165,6 @@ M_train = extract_features(X_train)
 # Normalize    
 scaler = StandardScaler().fit(M_train)
 M_train_n = scaler.transform(M_train)
-"""
-# We use a Support Vector Machine with RBF kernel
-best_clf = SVC(probability=True)
-# Train model
-best_clf.fit(M_train_n, y_train)
-"""
-
 
 clf = xgb.XGBClassifier()
 
