@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Nov 11 19:29:03 2021
 
-@author: epla
-"""
+
 
 import numpy as np
 import librosa as lbs
